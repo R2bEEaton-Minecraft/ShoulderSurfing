@@ -27,6 +27,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	private boolean isShoulderSurfing;
 	private boolean isTemporaryFirstPerson;
 	private boolean isAiming;
+	private boolean isFreeLookToggled;
 	private boolean isFreeLooking;
 	private int turningLockTime;
 	private boolean updatePlayerRotations;
@@ -59,6 +60,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 		
 		this.isAiming = isHoldingAdaptiveItem(minecraft, minecraft.getCameraEntity());
 		this.updatePlayerRotations = false;
+		this.isFreeLooking = false;
 		LocalPlayer player = minecraft.player;
 		
 		if(this.isShoulderSurfing && Config.CLIENT.getCrosshairType().doSwitchPerspective(this.isAiming))
@@ -81,7 +83,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 				this.turningLockTime = 0;
 			}
 			
-			this.isFreeLooking = InputHandler.FREE_LOOK.isDown() && !this.isAiming;
+			this.isFreeLooking = this.isFreeLookToggled && !this.isAiming;
 			this.camera.tick();
 			
 			if(!this.isFreeLooking && minecraft.getCameraEntity() == player)
@@ -185,8 +187,16 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	@Override
 	public void changePerspective(Perspective perspective)
 	{
+		boolean isShoulderSurfing = Perspective.SHOULDER_SURFING.equals(perspective);
+		boolean isExitingShoulderSurfing = this.isShoulderSurfing && !isShoulderSurfing;
 		((OptionsDuck) Minecraft.getInstance().options).shouldersurfing$setCameraTypeDirect(perspective.getCameraType());
-		this.setShoulderSurfing(Perspective.SHOULDER_SURFING.equals(perspective));
+		this.setShoulderSurfing(isShoulderSurfing);
+		
+		if(isExitingShoulderSurfing)
+		{
+			this.isFreeLookToggled = false;
+			this.isFreeLooking = false;
+		}
 	}
 	
 	@Override
@@ -213,6 +223,14 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	public void toggleCameraCoupling()
 	{
 		Config.CLIENT.toggleCameraCoupling();
+	}
+
+	public void toggleFreeLook()
+	{
+		if(this.isShoulderSurfing)
+		{
+			this.isFreeLookToggled = !this.isFreeLookToggled;
+		}
 	}
 	
 	@Override
@@ -290,6 +308,8 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 		this.camera.resetState();
 		this.crosshairRenderer.resetState();
 		this.turningLockTime = 0;
+		this.isFreeLookToggled = false;
+		this.isFreeLooking = false;
 	}
 	
 	public static ShoulderSurfingImpl getInstance()
