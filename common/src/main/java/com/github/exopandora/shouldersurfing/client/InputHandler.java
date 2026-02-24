@@ -139,7 +139,10 @@ public class InputHandler
 			this.instance.togglePerspective();
 		}
 		
-		while(FREE_LOOK.consumeClick());
+		while(FREE_LOOK.consumeClick())
+		{
+			this.instance.toggleFreeLook();
+		}
 		
 		while(TOGGLE_CAMERA_COUPLING.consumeClick())
 		{
