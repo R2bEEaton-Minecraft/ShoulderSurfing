@@ -41,6 +41,8 @@ public class ShoulderSurfingCamera implements IShoulderSurfingCamera
 	private float yRotOffsetO;
 	private float freeLookYRot;
 	private float lastMovedYRot;
+	private float lockedXRot;
+	private float lockedYRot;
 	private boolean initialized;
 	
 	public ShoulderSurfingCamera(ShoulderSurfingImpl instance)
@@ -114,11 +116,18 @@ public class ShoulderSurfingCamera implements IShoulderSurfingCamera
 		this.xRotOffsetO = 0.0F;
 		this.yRotOffsetO = 0.0F;
 		this.lastMovedYRot = this.yRot;
+		this.lockedXRot = this.xRot;
+		this.lockedYRot = this.yRot;
 		this.initialized = true;
 	}
 	
 	public Vec2f calcRotations(Entity cameraEntity, float partialTick)
 	{
+		if(this.instance.isFreeLookLocked())
+		{
+			return new Vec2f(this.lockedXRot, this.lockedYRot);
+		}
+		
 		if(!this.instance.isCameraDecoupled() && EntityHelper.isPlayerSpectatingEntity() && cameraEntity instanceof LivingEntity living)
 		{
 			return new Vec2f(living.getViewXRot(partialTick), living.getViewYRot(partialTick));
@@ -345,6 +354,11 @@ public class ShoulderSurfingCamera implements IShoulderSurfingCamera
 	{
 		if(this.instance.isShoulderSurfing())
 		{
+			if(this.instance.isFreeLookLocked())
+			{
+				return false;
+			}
+			
 			float scaledXRot = (float) (xRot * 0.15F);
 			float scaledYRot = (float) (yRot * 0.15F);
 			
@@ -528,6 +542,18 @@ public class ShoulderSurfingCamera implements IShoulderSurfingCamera
 	public float getFreeLookYRot()
 	{
 		return this.freeLookYRot;
+	}
+	
+	public void lockToFreeLookRotation()
+	{
+		float lockedXRot = Mth.clamp(this.getXRot(), -90.0F, 90.0F);
+		float lockedYRot = this.getYRot();
+		this.setXRot(lockedXRot);
+		this.setYRot(lockedYRot);
+		this.lockedXRot = lockedXRot;
+		this.lockedYRot = lockedYRot;
+		
+		this.freeLookYRot = this.yRot;
 	}
 	
 	public void setLastMovedYRot(float lastMovedYRot)

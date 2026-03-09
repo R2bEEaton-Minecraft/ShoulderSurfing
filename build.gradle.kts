@@ -7,10 +7,11 @@ plugins {
 val modName: String by project
 val modAuthor: String by project
 val modVersion: String by project
+val customBuildVersion: String by project
 val javaVersion: String by project
 val javaToolchainVersion: String by project
 
-version = "${libs.versions.minecraft.get()}-$modVersion"
+version = "${libs.versions.minecraft.get()}-$modVersion-$customBuildVersion"
 
 subprojects {
 	apply(plugin = "java")
@@ -57,7 +58,7 @@ subprojects {
 				"Specification-Vendor" to modAuthor,
 				"Specification-Version" to modVersion,
 				"Implementation-Title" to project.name,
-				"Implementation-Version" to "${libs.versions.minecraft.get()}-$modVersion",
+				"Implementation-Version" to rootProject.version,
 				"Implementation-Vendor" to modAuthor
 			))
 		}

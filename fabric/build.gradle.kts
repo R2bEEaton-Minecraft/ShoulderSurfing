@@ -120,7 +120,7 @@ tasks.build {
 }
 
 publishMods {
-	displayName = "$jarName-Fabric-${libs.versions.minecraft.get()}-$modVersion"
+	displayName = "$jarName-Fabric-${rootProject.version}"
 	version = "${rootProject.version}+fabric"
 	file = tasks.named<RemapJarTask>("remapJar").get().archiveFile
 	additionalFiles.from(tasks.named("apiJar").get())

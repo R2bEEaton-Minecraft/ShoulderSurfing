@@ -30,6 +30,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	private boolean isAiming;
 	private boolean isCameraDecoupled;
 	private boolean isFreeLookToggled;
+	private boolean isFreeLookLocked;
 	private boolean isFreeLooking;
 	private int turningLockTime;
 	private boolean updatePlayerRotations;
@@ -189,6 +190,11 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	
 	public boolean shouldEntityFollowCamera(LivingEntity cameraEntity)
 	{
+		if(this.isFreeLookLocked)
+		{
+			return false;
+		}
+		
 		return (this.isAiming && !Config.CLIENT.getCrosshairType().isAimingDecoupled() || cameraEntity.isFallFlying()) ||
 			!this.isCameraDecoupled();
 	}
@@ -230,6 +236,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 		if(isExitingShoulderSurfing)
 		{
 			this.isFreeLookToggled = false;
+			this.isFreeLookLocked = false;
 			this.isFreeLooking = false;
 		}
 		
@@ -274,7 +281,22 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	{
 		if(this.isShoulderSurfing)
 		{
-			this.isFreeLookToggled = !this.isFreeLookToggled;
+			if(this.isFreeLookToggled)
+			{
+				this.camera.lockToFreeLookRotation();
+				this.isFreeLookToggled = false;
+				this.isFreeLookLocked = true;
+			}
+			else if(this.isFreeLookLocked)
+			{
+				this.camera.resetState();
+				this.isFreeLookLocked = false;
+				this.isFreeLooking = false;
+			}
+			else
+			{
+				this.isFreeLookToggled = true;
+			}
 		}
 	}
 	
@@ -311,6 +333,11 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	public boolean isFreeLooking()
 	{
 		return this.isFreeLooking && this.isShoulderSurfing;
+	}
+	
+	public boolean isFreeLookLocked()
+	{
+		return this.isFreeLookLocked && this.isShoulderSurfing;
 	}
 	
 	@Override
@@ -355,6 +382,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 		this.crosshairRenderer.resetState();
 		this.turningLockTime = 0;
 		this.isFreeLookToggled = false;
+		this.isFreeLookLocked = false;
 		this.isFreeLooking = false;
 	}
 	

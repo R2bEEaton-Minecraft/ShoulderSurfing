@@ -156,6 +156,11 @@ public class InputHandler
 		Entity cameraEntity = minecraft.getCameraEntity();
 		Vec2f moveVector = new Vec2f(input.leftImpulse, input.forwardImpulse);
 		
+		if(this.instance.isShoulderSurfing() && this.instance.isFreeLookLocked())
+		{
+			return;
+		}
+		
 		if(this.instance.isShoulderSurfing() && this.instance.isFreeLooking())
 		{
 			moveVector.rotateDegrees(Mth.degreesDifference(cameraEntity.getYRot(), this.instance.getCamera().getFreeLookYRot()));
