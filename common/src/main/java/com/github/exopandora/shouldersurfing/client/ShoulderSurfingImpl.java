@@ -32,6 +32,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	private boolean isFreeLookToggled;
 	private boolean isFreeLookLocked;
 	private boolean isFreeLooking;
+	private boolean wasFreeLookKeyDown;
 	private int turningLockTime;
 	private boolean updatePlayerRotations;
 	private float playerXRotO;
@@ -238,6 +239,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 			this.isFreeLookToggled = false;
 			this.isFreeLookLocked = false;
 			this.isFreeLooking = false;
+			this.wasFreeLookKeyDown = false;
 		}
 		
 		if(minecraft.level != null)
@@ -276,27 +278,39 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	{
 		Config.CLIENT.toggleCameraCoupling();
 	}
-
-	public void toggleFreeLook()
+	
+	public void handleFreeLookInput(boolean isFreeLookKeyDown)
+	{
+		if(!this.isShoulderSurfing)
+		{
+			this.wasFreeLookKeyDown = isFreeLookKeyDown;
+			return;
+		}
+		
+		if(isFreeLookKeyDown && !this.wasFreeLookKeyDown)
+		{
+			this.isFreeLookToggled = true;
+			this.isFreeLookLocked = false;
+		}
+		else if(!isFreeLookKeyDown && this.wasFreeLookKeyDown && this.isFreeLookToggled)
+		{
+			this.camera.lockToFreeLookRotation();
+			this.isFreeLookToggled = false;
+			this.isFreeLookLocked = true;
+			this.isFreeLooking = false;
+		}
+		
+		this.wasFreeLookKeyDown = isFreeLookKeyDown;
+	}
+	
+	public void resetFreeLookCamera()
 	{
 		if(this.isShoulderSurfing)
 		{
-			if(this.isFreeLookToggled)
-			{
-				this.camera.lockToFreeLookRotation();
-				this.isFreeLookToggled = false;
-				this.isFreeLookLocked = true;
-			}
-			else if(this.isFreeLookLocked)
-			{
-				this.camera.resetState();
-				this.isFreeLookLocked = false;
-				this.isFreeLooking = false;
-			}
-			else
-			{
-				this.isFreeLookToggled = true;
-			}
+			this.camera.resetState();
+			this.isFreeLookToggled = false;
+			this.isFreeLookLocked = false;
+			this.isFreeLooking = false;
 		}
 	}
 	
@@ -384,6 +398,7 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 		this.isFreeLookToggled = false;
 		this.isFreeLookLocked = false;
 		this.isFreeLooking = false;
+		this.wasFreeLookKeyDown = false;
 	}
 	
 	public static ShoulderSurfingImpl getInstance()

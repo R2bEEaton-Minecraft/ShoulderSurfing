@@ -29,6 +29,7 @@ public class InputHandler
 	public static final KeyMapping TOGGLE_THIRD_PERSON_FRONT = createKeyMapping("toggle_third_person_front", InputConstants.UNKNOWN.getValue());
 	public static final KeyMapping TOGGLE_THIRD_PERSON_BACK = createKeyMapping("toggle_third_person_back", InputConstants.UNKNOWN.getValue());
 	public static final KeyMapping FREE_LOOK = createKeyMapping("free_look", GLFW.GLFW_KEY_LEFT_ALT);
+	public static final KeyMapping RESET_CAMERA = createKeyMapping("reset_camera", GLFW.GLFW_KEY_HOME);
 	public static final KeyMapping TOGGLE_CAMERA_COUPLING = createKeyMapping("toggle_camera_coupling", InputConstants.UNKNOWN.getValue());
 	
 	private final ShoulderSurfingImpl instance;
@@ -139,9 +140,11 @@ public class InputHandler
 			this.instance.togglePerspective();
 		}
 		
-		while(FREE_LOOK.consumeClick())
+		this.instance.handleFreeLookInput(FREE_LOOK.isDown());
+		
+		while(RESET_CAMERA.consumeClick())
 		{
-			this.instance.toggleFreeLook();
+			this.instance.resetFreeLookCamera();
 		}
 		
 		while(TOGGLE_CAMERA_COUPLING.consumeClick())

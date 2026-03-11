@@ -316,5 +316,6 @@
   "key.${modId}.toggle_third_person_front": "Toggle Third Person (Front)",
   "key.${modId}.toggle_third_person_back": "Toggle Third Person (Back)",
   "key.${modId}.free_look": "Free Look",
+  "key.${modId}.reset_camera": "Reset Camera",
   "key.${modId}.toggle_camera_coupling": "Toggle Camera Coupling"
 }

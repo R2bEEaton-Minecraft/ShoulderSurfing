@@ -102,6 +102,7 @@ public class ShoulderSurfingForge
 		event.register(InputHandler.TOGGLE_THIRD_PERSON_FRONT);
 		event.register(InputHandler.TOGGLE_THIRD_PERSON_BACK);
 		event.register(InputHandler.FREE_LOOK);
+		event.register(InputHandler.RESET_CAMERA);
 		event.register(InputHandler.TOGGLE_CAMERA_COUPLING);
 	}
 	
