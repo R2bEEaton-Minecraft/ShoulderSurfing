@@ -218,6 +218,11 @@ public class ShoulderSurfingImpl implements IShoulderSurfing
 	@Override
 	public void changePerspective(Perspective perspective)
 	{
+		if(perspective == Perspective.THIRD_PERSON_FRONT)
+		{
+			perspective = Perspective.FIRST_PERSON;
+		}
+
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = minecraft.player;
 		boolean wasShoulderSurfing = this.isShoulderSurfing;

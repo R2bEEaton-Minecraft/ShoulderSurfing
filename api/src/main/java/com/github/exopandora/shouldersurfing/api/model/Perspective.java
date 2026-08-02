@@ -40,13 +40,17 @@ public enum Perspective
 			next = switch(this)
 			{
 				case FIRST_PERSON, THIRD_PERSON_BACK -> SHOULDER_SURFING;
-				case THIRD_PERSON_FRONT -> FIRST_PERSON;
-				case SHOULDER_SURFING -> THIRD_PERSON_FRONT;
+				case THIRD_PERSON_FRONT, SHOULDER_SURFING -> FIRST_PERSON;
 			};
 		}
 		else
 		{
-			next = Perspective.values()[(this.ordinal() + 1) % Perspective.values().length];
+			next = switch(this)
+			{
+				case FIRST_PERSON -> THIRD_PERSON_BACK;
+				case THIRD_PERSON_BACK -> SHOULDER_SURFING;
+				case THIRD_PERSON_FRONT, SHOULDER_SURFING -> FIRST_PERSON;
+			};
 		}
 		
 		switch(next)
@@ -64,10 +68,6 @@ public enum Perspective
 				}
 				break;
 			case THIRD_PERSON_FRONT:
-				if(config.isThirdPersonFrontEnabled())
-				{
-					return THIRD_PERSON_FRONT;
-				}
 				break;
 			case SHOULDER_SURFING:
 				return SHOULDER_SURFING;
@@ -82,7 +82,7 @@ public enum Perspective
 		{
 			case FIRST_PERSON -> config.isFirstPersonEnabled();
 			case THIRD_PERSON_BACK -> config.isThirdPersonBackEnabled() && !config.replaceDefaultPerspective();
-			case THIRD_PERSON_FRONT -> config.isThirdPersonFrontEnabled();
+			case THIRD_PERSON_FRONT -> false;
 			case SHOULDER_SURFING -> true;
 		};
 	}
@@ -93,7 +93,7 @@ public enum Perspective
 		{
 			case FIRST_PERSON -> Perspective.FIRST_PERSON;
 			case THIRD_PERSON_BACK -> shoulderSurfing ? Perspective.SHOULDER_SURFING : Perspective.THIRD_PERSON_BACK;
-			case THIRD_PERSON_FRONT -> Perspective.THIRD_PERSON_FRONT;
+			case THIRD_PERSON_FRONT -> Perspective.FIRST_PERSON;
 		};
 	}
 	

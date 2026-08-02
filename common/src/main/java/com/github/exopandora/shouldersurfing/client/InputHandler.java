@@ -26,7 +26,6 @@ public class InputHandler
 	public static final KeyMapping CAMERA_DOWN = createKeyMapping("adjust_camera_down", GLFW.GLFW_KEY_PAGE_DOWN);
 	public static final KeyMapping SWAP_SHOULDER = createKeyMapping("swap_shoulder", GLFW.GLFW_KEY_O);
 	public static final KeyMapping TOGGLE_FIRST_PERSON = createKeyMapping("toggle_first_person", InputConstants.UNKNOWN.getValue());
-	public static final KeyMapping TOGGLE_THIRD_PERSON_FRONT = createKeyMapping("toggle_third_person_front", InputConstants.UNKNOWN.getValue());
 	public static final KeyMapping TOGGLE_THIRD_PERSON_BACK = createKeyMapping("toggle_third_person_back", InputConstants.UNKNOWN.getValue());
 	public static final KeyMapping FREE_LOOK = createKeyMapping("free_look", GLFW.GLFW_KEY_LEFT_ALT);
 	public static final KeyMapping RESET_CAMERA = createKeyMapping("reset_camera", GLFW.GLFW_KEY_HOME);
@@ -48,18 +47,6 @@ public class InputHandler
 			if(this.instance.isShoulderSurfing())
 			{
 				this.instance.changePerspective(Perspective.FIRST_PERSON);
-			}
-			else
-			{
-				this.instance.changePerspective(Perspective.SHOULDER_SURFING);
-			}
-		}
-		
-		while(TOGGLE_THIRD_PERSON_FRONT.consumeClick())
-		{
-			if(this.instance.isShoulderSurfing())
-			{
-				this.instance.changePerspective(Perspective.THIRD_PERSON_FRONT);
 			}
 			else
 			{

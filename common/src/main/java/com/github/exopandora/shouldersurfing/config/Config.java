@@ -108,7 +108,6 @@ public class Config
 		
 		private final BooleanValue replaceDefaultPerspective;
 		private final BooleanValue isFirstPersonEnabled;
-		private final BooleanValue isThirdPersonFrontEnabled;
 		private final BooleanValue isThirdPersonBackEnabled;
 		private final ConfigValue<Perspective> defaultPerspective;
 		private final BooleanValue rememberLastPerspective;
@@ -472,11 +471,6 @@ public class Config
 				.comment("Whether or not the first person perspective is enabled.")
 				.translation(MOD_ID + ".configuration.perspective.first_person_enabled")
 				.define("first_person_enabled", true);
-			
-			this.isThirdPersonFrontEnabled = builder
-				.comment("Whether or not the third person front perspective is enabled.")
-				.translation(MOD_ID + ".configuration.perspective.third_person_front_enabled")
-				.define("third_person_front_enabled", true);
 			
 			this.isThirdPersonBackEnabled = builder
 				.comment("Whether or not the third person back perspective is enabled.")
@@ -965,7 +959,7 @@ public class Config
 		@Override
 		public boolean isThirdPersonFrontEnabled()
 		{
-			return this.isThirdPersonFrontEnabled.get();
+			return false;
 		}
 		
 		@Override
